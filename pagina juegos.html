@@ -1,0 +1,3105 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Neon Esports Tournament</title>
+  <style>
+    :root{
+      --bg0:#07060a;
+      --bg1:#0b0a12;
+      --card: rgba(14, 14, 22, .72);
+      --card2: rgba(18, 18, 28, .78);
+      --stroke: rgba(255,255,255,.12);
+      --stroke2: rgba(255,255,255,.08);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.66);
+      --muted2: rgba(255,255,255,.50);
+      --good:#60ffb0;
+      --warn:#ffd56b;
+      --bad:#ff4d7d;
+
+      --neonA:#00e5ff;
+      --neonB:#ff2bd6;
+      --neonC:#b7ff3c;
+      --neonD:#8b5cff;
+
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --shadow2: 0 10px 40px rgba(0,0,0,.45);
+      --radius: 18px;
+      --radius2: 26px;
+      --gap: 14px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 800px at 20% 5%, rgba(255,43,214,.10), transparent 55%),
+        radial-gradient(900px 650px at 80% 18%, rgba(0,229,255,.12), transparent 55%),
+        radial-gradient(1200px 820px at 55% 85%, rgba(183,255,60,.08), transparent 57%),
+        linear-gradient(180deg,var(--bg0),var(--bg1));
+      color:var(--text);
+      font-family:var(--sans);
+      overflow-x:hidden;
+    }
+
+    a{color:inherit}
+    button{font:inherit}
+    ::selection{background: rgba(0,229,255,.25)}
+
+    /* ===== Top bar ===== */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(180deg, rgba(7,6,10,.85), rgba(7,6,10,.40));
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .topbar-inner{
+      max-width:1200px; margin:0 auto;
+      padding:12px 16px;
+      display:flex; align-items:center; gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; min-width: 220px;
+    }
+    .brand-badge{
+      width:34px;height:34px;border-radius:12px;
+      background:
+        radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,.25), transparent 60%),
+        linear-gradient(135deg, rgba(0,229,255,.85), rgba(255,43,214,.85));
+      box-shadow: 0 0 24px rgba(0,229,255,.22), 0 0 24px rgba(255,43,214,.18);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .brand h1{
+      font-size:13px; margin:0; letter-spacing:.15em; text-transform:uppercase;
+      color:rgba(255,255,255,.88); font-weight:700;
+    }
+    .brand small{
+      display:block; font-family:var(--mono); font-size:11px; letter-spacing:.06em;
+      color:rgba(255,255,255,.60);
+      margin-top:2px;
+    }
+    nav{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    }
+    .navlink{
+      padding:9px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: rgba(255,255,255,.78);
+      text-decoration:none;
+      font-size:12px;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+    .navlink:hover{transform: translateY(-1px); border-color: rgba(0,229,255,.30); background: rgba(0,229,255,.06)}
+    .navlink:focus-visible{outline: 2px solid rgba(0,229,255,.55); outline-offset:2px}
+
+    .top-spacer{flex:1}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.78);
+      font-size:12px;
+      letter-spacing:.02em;
+      white-space:nowrap;
+    }
+    .dot{
+      width:8px; height:8px; border-radius: 999px;
+      background: var(--neonA);
+      box-shadow: 0 0 12px rgba(0,229,255,.65);
+    }
+
+    /* ===== Sections ===== */
+    .wrap{max-width:1200px; margin:0 auto; padding: 0 16px 80px}
+    section{padding: 58px 0}
+    .section-head{
+      display:flex; align-items:flex-end; gap:12px; justify-content:space-between;
+      margin: 0 0 16px;
+    }
+    .section-title{
+      margin:0;
+      font-size: 20px;
+      letter-spacing:.02em;
+    }
+    .section-sub{
+      margin:4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 70ch;
+    }
+
+    .card{
+      position:relative;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(700px 220px at 15% 0%, rgba(0,229,255,.10), transparent 60%),
+        radial-gradient(520px 220px at 85% 0%, rgba(255,43,214,.08), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.06), transparent 35%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .card > *{position:relative}
+
+    /* ===== Hero ===== */
+    .hero{
+      padding-top: 18px;
+      padding-bottom: 34px;
+    }
+    .hero-shell{
+      border-radius: 34px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.35);
+      box-shadow: var(--shadow);
+      position:relative;
+      min-height: 520px;
+    }
+    #heroCanvas{
+      display:block;
+      width:100%;
+      height:520px;
+      background: radial-gradient(1000px 600px at 35% 35%, rgba(0,229,255,.14), transparent 60%),
+                  radial-gradient(900px 650px at 65% 30%, rgba(255,43,214,.12), transparent 60%),
+                  radial-gradient(1200px 800px at 50% 100%, rgba(183,255,60,.07), transparent 65%),
+                  linear-gradient(180deg, rgba(8,8,14,1), rgba(6,6,10,1));
+    }
+
+    /* scanlines + vignette */
+    .scanlines{
+      pointer-events:none;
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.40), transparent 18%, rgba(0,0,0,.42)),
+        repeating-linear-gradient(180deg,
+          rgba(255,255,255,.05) 0px,
+          rgba(255,255,255,.05) 1px,
+          rgba(0,0,0,0) 3px,
+          rgba(0,0,0,0) 7px
+        );
+      mix-blend-mode: overlay;
+      opacity:.35;
+    }
+    .glow-edge{
+      pointer-events:none;
+      position:absolute; inset:-2px;
+      border-radius: 34px;
+      box-shadow:
+        0 0 40px rgba(0,229,255,.18),
+        0 0 44px rgba(255,43,214,.12),
+        inset 0 0 26px rgba(255,255,255,.05);
+    }
+    .hero-content{
+      position:absolute; inset:0;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      padding: 26px;
+      align-items:end;
+    }
+    .hero-left{
+      max-width: 720px;
+    }
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      box-shadow: 0 0 20px rgba(0,229,255,.10);
+      color: rgba(255,255,255,.78);
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom: 12px;
+    }
+    .kicker b{color: rgba(255,255,255,.92)}
+    .headline{
+      margin:0;
+      font-size: clamp(30px, 3.8vw, 54px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      text-shadow: 0 0 26px rgba(0,229,255,.14), 0 0 22px rgba(255,43,214,.12);
+    }
+    .headline .neon{
+      background: linear-gradient(90deg, rgba(0,229,255,1), rgba(255,43,214,1), rgba(183,255,60,1));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color: transparent;
+    }
+    .hero-meta{
+      margin: 12px 0 0;
+      display:flex; flex-wrap:wrap; gap:10px;
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+    }
+    .meta-chip{
+      display:inline-flex; align-items:center; gap:9px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.26);
+      backdrop-filter: blur(10px);
+    }
+    .meta-chip code{
+      font-family: var(--mono);
+      color: rgba(255,255,255,.82);
+      font-size: 12px;
+    }
+
+    .hero-cta{
+      display:flex; flex-wrap:wrap; gap:10px; margin-top: 14px;
+    }
+    .btn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.88);
+      padding: 11px 14px;
+      border-radius: 16px;
+      cursor:pointer;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+      display:inline-flex; align-items:center; gap:10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.30);
+      font-weight: 650;
+      letter-spacing:.02em;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(0,229,255,.35); background: rgba(0,229,255,.06)}
+    .btn:active{transform: translateY(0px) scale(.99)}
+    .btn:focus-visible{outline: 2px solid rgba(0,229,255,.60); outline-offset:2px}
+    .btn.primary{
+      border-color: rgba(0,229,255,.40);
+      background: linear-gradient(135deg, rgba(0,229,255,.16), rgba(255,43,214,.09));
+      box-shadow: 0 0 28px rgba(0,229,255,.12), 0 0 20px rgba(255,43,214,.10), 0 10px 34px rgba(0,0,0,.30);
+    }
+    .btn.ghost{background: rgba(0,0,0,.22)}
+    .btn .icon{
+      width: 22px; height: 22px; border-radius: 10px;
+      display:inline-grid; place-items:center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+    }
+
+    .hero-right{
+      justify-self:end;
+      width: 100%;
+      max-width: 360px;
+    }
+    .hero-panel{
+      padding: 16px;
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.25);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 30px rgba(0,229,255,.06);
+    }
+    .hero-panel h3{margin:0 0 8px; font-size:13px; letter-spacing:.12em; text-transform:uppercase; color: rgba(255,255,255,.84)}
+    .hero-panel p{margin:0 0 12px; color: rgba(255,255,255,.66); font-size: 13px; line-height: 1.5}
+    .hero-stats{
+      display:grid; grid-template-columns:1fr 1fr; gap:10px;
+    }
+    .stat{
+      padding: 12px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .stat b{display:block; font-size: 18px}
+    .stat small{color: rgba(255,255,255,.60); font-family: var(--mono)}
+    .tiny-row{display:flex; gap:10px; margin-top: 10px; flex-wrap:wrap}
+    .tiny{
+      font-size:12px; color: rgba(255,255,255,.70);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      font-family: var(--mono);
+    }
+
+    /* ===== Layout utils ===== */
+    .grid{
+      display:grid;
+      gap: var(--gap);
+    }
+    .grid-2{
+      grid-template-columns: 1fr 1fr;
+    }
+    .grid-3{
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .grid-4{
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 980px){
+      .hero-content{grid-template-columns: 1fr; align-items:start}
+      .hero-right{max-width: 520px; justify-self:start}
+      #heroCanvas{height: 560px}
+      .grid-2,.grid-3,.grid-4{grid-template-columns: 1fr}
+    }
+
+    /* ===== Bracket ===== */
+    .toolbar{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+      margin: 14px 0 12px;
+    }
+    .left-tools, .right-tools{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .select, .toggle, .search{
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.24);
+      color: rgba(255,255,255,.84);
+      padding: 10px 12px;
+      font-size: 13px;
+      outline: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .toggle{display:flex; gap:10px; align-items:center}
+    .toggle input{accent-color: var(--neonA)}
+    .hint{color: rgba(255,255,255,.58); font-size: 12px; font-family: var(--mono)}
+    .bracket-wrap{
+      overflow:auto;
+      padding: 14px;
+    }
+
+    .bracket{
+      min-width: 980px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .round{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .round-title{
+      font-size: 12px;
+      font-family: var(--mono);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.68);
+      padding: 8px 10px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 14px;
+      position:sticky;
+      top: 64px;
+      z-index: 3;
+      backdrop-filter: blur(10px);
+    }
+    .match{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.25);
+      overflow:hidden;
+      position:relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,.26);
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .match:hover{
+      transform: translateY(-1px);
+      border-color: rgba(0,229,255,.25);
+      background: rgba(0,229,255,.04);
+    }
+    .match[data-state="ready"]{border-color: rgba(183,255,60,.22)}
+    .match[data-state="done"]{border-color: rgba(255,43,214,.22)}
+    .match-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      color: rgba(255,255,255,.70);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .match-head .time{color: rgba(255,255,255,.80)}
+    .match-body{padding: 10px 10px 12px}
+    .team-row{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 8px 8px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      margin-bottom: 8px;
+      transition: background .15s ease, border-color .15s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .team-row:hover{border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.045)}
+    .team-row[data-win="1"]{
+      border-color: rgba(96,255,176,.35);
+      background: linear-gradient(90deg, rgba(96,255,176,.14), rgba(96,255,176,.04));
+    }
+    .team-left{
+      display:flex; align-items:center; gap:10px;
+      min-width: 0;
+    }
+    .logo{
+      width: 28px; height: 28px; border-radius: 10px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 0 18px rgba(0,229,255,.08);
+      display:grid; place-items:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .logo img{width:100%; height:100%; display:block}
+    .tname{
+      display:flex; flex-direction:column; gap:2px; min-width:0;
+    }
+    .tname b{
+      font-size: 13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .tname small{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(255,255,255,.58);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .score{
+      font-family: var(--mono);
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .badge{
+      padding: 5px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.74);
+      font-size: 11px;
+      font-family: var(--mono);
+    }
+    .match-actions{
+      display:flex; gap:8px; flex-wrap:wrap;
+      padding: 0 10px 12px;
+    }
+    .mini-btn{
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: rgba(255,255,255,.80);
+      padding: 9px 10px;
+      cursor:pointer;
+      font-size:12px;
+      letter-spacing:.02em;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .mini-btn:hover{transform: translateY(-1px); border-color: rgba(0,229,255,.26); background: rgba(0,229,255,.05)}
+    .mini-btn:focus-visible{outline:2px solid rgba(0,229,255,.55); outline-offset:2px}
+
+    /* ===== Schedule ===== */
+    .schedule-wrap{padding: 14px}
+    .schedule-list{
+      display:grid; gap: 10px;
+      padding: 0 14px 14px;
+    }
+    .schedule-item{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      padding: 12px;
+      display:grid;
+      grid-template-columns: 140px 1fr auto;
+      gap: 12px;
+      align-items:center;
+      transition: border-color .15s ease, transform .15s ease, background .15s ease;
+    }
+    .schedule-item:hover{transform: translateY(-1px); border-color: rgba(255,43,214,.22); background: rgba(255,43,214,.04)}
+    .sched-time{
+      font-family: var(--mono);
+      color: rgba(255,255,255,.82);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .sched-time small{display:block; color: rgba(255,255,255,.55)}
+    .sched-mid{
+      min-width: 0;
+    }
+    .sched-title{
+      margin:0; font-size: 14px; letter-spacing:.01em;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .sched-sub{
+      margin: 4px 0 0;
+      color: rgba(255,255,255,.66);
+      font-size: 12px;
+      display:flex; flex-wrap:wrap; gap:8px;
+      align-items:center;
+    }
+    .tag{
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: rgba(255,255,255,.68);
+    }
+    .stage-tag{border-color: rgba(0,229,255,.23)}
+    .day-tag{border-color: rgba(183,255,60,.20)}
+    .schedule-item .actions{
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    @media (max-width: 780px){
+      .schedule-item{grid-template-columns: 1fr; align-items:start}
+      .schedule-item .actions{justify-content:flex-start}
+    }
+
+    /* ===== Teams ===== */
+    .teams-wrap{padding: 14px}
+    .teams-top{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      padding: 0 14px 10px;
+    }
+    .teams-grid{
+      padding: 0 14px 14px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .teams-grid{grid-template-columns: 1fr}
+    }
+    .team-card{
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+      position:relative;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .team-card:hover{transform: translateY(-1px); border-color: rgba(0,229,255,.25); background: rgba(0,229,255,.04)}
+    .team-card.selected{border-color: rgba(183,255,60,.30); box-shadow: 0 0 0 2px rgba(183,255,60,.10), 0 20px 60px rgba(0,0,0,.35)}
+    .team-card-head{
+      padding: 12px 12px 10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+    }
+    .team-card-head .left{
+      display:flex; align-items:center; gap:10px; min-width:0;
+    }
+    .team-card-head .name{
+      min-width:0;
+    }
+    .team-card-head .name b{
+      display:block;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      font-size: 14px;
+      letter-spacing:.02em;
+    }
+    .team-card-head .name small{
+      display:flex; gap:8px; align-items:center;
+      color: rgba(255,255,255,.60);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .flag{
+      font-size: 14px;
+      filter: drop-shadow(0 0 10px rgba(0,229,255,.12));
+    }
+    .compare-btn{
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: rgba(255,255,255,.82);
+      padding: 9px 10px;
+      cursor:pointer;
+      font-size: 12px;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+      display:inline-flex; align-items:center; gap:8px;
+      white-space:nowrap;
+    }
+    .compare-btn:hover{transform: translateY(-1px); border-color: rgba(183,255,60,.28); background: rgba(183,255,60,.06)}
+    .team-card-body{
+      padding: 12px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .team-card-body{grid-template-columns: 1fr}
+    }
+    .roster{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding: 10px;
+      min-height: 130px;
+    }
+    .roster h4{
+      margin:0 0 8px;
+      font-size: 12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.75);
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+    }
+    .roster ul{list-style:none; margin:0; padding:0; display:grid; gap:7px}
+    .player{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 7px 8px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
+      font-size: 12px;
+    }
+    .player b{font-family: var(--mono); font-size: 12px}
+    .player span{
+      color: rgba(255,255,255,.68);
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .statsbox{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding: 10px;
+      display:grid;
+      gap:10px;
+      align-content:start;
+    }
+    .metric{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
+      padding: 9px 10px;
+      font-size: 12px;
+    }
+    .metric .k{color: rgba(255,255,255,.72)}
+    .metric .v{font-family: var(--mono); color: rgba(255,255,255,.86)}
+    .form{
+      display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .chip{
+      font-family: var(--mono);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      font-size: 11px;
+    }
+    .chip.win{border-color: rgba(96,255,176,.25); background: rgba(96,255,176,.06)}
+    .chip.loss{border-color: rgba(255,77,125,.25); background: rgba(255,77,125,.06)}
+    .chip.draw{border-color: rgba(255,213,107,.22); background: rgba(255,213,107,.06)}
+
+    /* Compare drawer */
+    .drawer{
+      position: fixed;
+      left: 16px; right: 16px; bottom: 16px;
+      z-index: 60;
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(10,10,16,.76);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 30px 90px rgba(0,0,0,.60);
+      transform: translateY(140%);
+      opacity: 0;
+      transition: transform .20s ease, opacity .20s ease;
+      overflow:hidden;
+    }
+    .drawer.open{transform: translateY(0); opacity: 1}
+    .drawer-head{
+      padding: 12px 14px;
+      display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+    }
+    .drawer-head b{letter-spacing:.08em; text-transform:uppercase; font-size: 12px}
+    .drawer-body{
+      padding: 14px;
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 900px){
+      .drawer-body{grid-template-columns: 1fr}
+    }
+    .compare-card{
+      border-radius: 20px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    .compare-card .top{
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .compare-card .top .left{display:flex; align-items:center; gap:10px; min-width:0}
+    .compare-card .top .left b{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .compare-card .rows{padding: 10px 12px; display:grid; gap:8px}
+    .row{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
+    }
+    .row .k{color: rgba(255,255,255,.70)}
+    .row .v{font-family: var(--mono); color: rgba(255,255,255,.86)}
+    .drawer-actions{
+      display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;
+    }
+
+    /* ===== Stream ===== */
+    .stream-wrap{padding: 14px}
+    .stream-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      padding: 14px;
+    }
+    @media (max-width: 980px){
+      .stream-grid{grid-template-columns:1fr}
+    }
+    .playerBox{
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      overflow:hidden;
+      min-height: 320px;
+      position:relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+    .playerBox::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(600px 300px at 25% 30%, rgba(0,229,255,.14), transparent 65%),
+        radial-gradient(520px 300px at 75% 40%, rgba(255,43,214,.12), transparent 65%),
+        linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+      pointer-events:none;
+    }
+    .playerInner{
+      position:absolute; inset:0;
+      display:grid; place-items:center;
+      padding: 18px;
+      text-align:center;
+    }
+    .playBadge{
+      width: 72px; height: 72px; border-radius: 26px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 0 28px rgba(0,229,255,.12), 0 0 22px rgba(255,43,214,.10);
+      display:grid; place-items:center;
+      font-family: var(--mono);
+      font-size: 20px;
+    }
+    .playerInner h3{margin: 14px 0 6px; font-size: 16px}
+    .playerInner p{margin:0; color: rgba(255,255,255,.66); font-size: 13px; line-height: 1.5; max-width: 52ch}
+    .ticker{
+      position:absolute;
+      left: 12px; right:12px; bottom:12px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(12px);
+      padding: 10px 12px;
+      display:flex; gap:10px; align-items:center;
+      overflow:hidden;
+    }
+    .ticker .label{
+      font-family: var(--mono);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size: 11px;
+      color: rgba(255,255,255,.72);
+      padding: 5px 9px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .ticker .text{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sidePanel{
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .sidePanel .head{
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+    }
+    .sidePanel .head h3{margin:0; font-size: 12px; letter-spacing:.12em; text-transform:uppercase; color: rgba(255,255,255,.78)}
+    .carousel{
+      padding: 10px 14px 14px;
+      overflow:hidden;
+    }
+    .rail{
+      display:flex; gap:10px;
+      will-change: transform;
+      animation: slide 18s linear infinite;
+    }
+    @keyframes slide{
+      to { transform: translateX(-50%); }
+    }
+    .sponsor{
+      flex: 0 0 auto;
+      width: 150px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding: 12px;
+      display:flex; gap:10px; align-items:center;
+    }
+    .sLogo{
+      width: 34px; height: 34px; border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,.22), transparent 60%),
+        linear-gradient(135deg, rgba(0,229,255,.22), rgba(255,43,214,.14));
+      box-shadow: 0 0 18px rgba(0,229,255,.08);
+    }
+    .sponsor b{display:block; font-size: 12px}
+    .sponsor small{display:block; font-family: var(--mono); color: rgba(255,255,255,.58); font-size: 11px; margin-top:2px}
+    .nowNext{
+      padding: 12px 14px 14px;
+      display:grid; gap:10px;
+    }
+    .nn{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding: 10px 12px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      font-size: 12px;
+    }
+    .nn .k{font-family: var(--mono); color: rgba(255,255,255,.68)}
+    .nn .v{font-family: var(--mono); color: rgba(255,255,255,.86); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+    /* ===== Venue ===== */
+    .venue-wrap{padding: 14px}
+    .venue-grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 12px;
+      padding: 14px;
+    }
+    @media (max-width: 980px){ .venue-grid{grid-template-columns:1fr} }
+    .mapBox{
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+      min-height: 320px;
+      position:relative;
+    }
+    .mapBox svg{width:100%; height:100%; display:block}
+    .loc{
+      position:absolute; left: 16px; bottom: 16px; right: 16px;
+      border-radius: 20px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+      display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+    }
+    .loc b{font-size: 13px}
+    .loc span{font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,.70)}
+    .links{display:flex; gap:8px; flex-wrap:wrap}
+    .links a{
+      text-decoration:none;
+      padding: 9px 10px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      font-size: 12px;
+      font-family: var(--mono);
+      color: rgba(255,255,255,.80);
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .links a:hover{transform: translateY(-1px); border-color: rgba(0,229,255,.28); background: rgba(0,229,255,.05)}
+    .travelPanel{
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .travelPanel .head{
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+    }
+    .travelPanel .head h3{margin:0; font-size: 12px; letter-spacing:.12em; text-transform:uppercase; color: rgba(255,255,255,.78)}
+    .travelPanel .body{padding: 12px 14px 14px; display:grid; gap:12px}
+    .hotel{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding: 10px 12px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      font-size: 12px;
+    }
+    .hotel b{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .hotel span{font-family: var(--mono); color: rgba(255,255,255,.64)}
+    .note{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      padding: 12px;
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* ===== Modal / Toast ===== */
+    .modal{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      place-items:center;
+      z-index: 80;
+      padding: 16px;
+    }
+    .modal.open{display:grid}
+    .modalCard{
+      width: min(780px, 100%);
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(10,10,16,.86);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 30px 120px rgba(0,0,0,.70);
+      overflow:hidden;
+    }
+    .modalHead{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+    }
+    .modalHead b{letter-spacing:.12em; text-transform:uppercase; font-size: 12px}
+    .modalBody{padding: 14px}
+    .formGrid{
+      display:grid; gap: 12px;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 780px){.formGrid{grid-template-columns:1fr}}
+    .field label{
+      display:block;
+      font-size: 11px;
+      font-family: var(--mono);
+      color: rgba(255,255,255,.70);
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      margin: 0 0 6px;
+    }
+    .field input, .field select, .field textarea{
+      width:100%;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.86);
+      padding: 11px 12px;
+      outline:none;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .field textarea{min-height: 92px; resize: vertical}
+    .modalActions{
+      display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;
+      padding: 0 14px 14px;
+    }
+
+    .toast{
+      position: fixed; right: 16px; top: 76px;
+      z-index: 90;
+      width: min(360px, calc(100% - 32px));
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(10,10,16,.78);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 20px 70px rgba(0,0,0,.60);
+      padding: 12px 12px;
+      transform: translateY(-12px);
+      opacity: 0;
+      pointer-events:none;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+    .toast.show{transform: translateY(0); opacity: 1}
+    .toast b{display:block; font-size: 13px}
+    .toast p{margin:4px 0 0; color: rgba(255,255,255,.70); font-size: 12px; line-height: 1.35}
+
+    /* ===== Footer ===== */
+    footer{
+      padding: 22px 0 60px;
+      color: rgba(255,255,255,.58);
+      font-size: 12px;
+    }
+    .footerline{
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 14px;
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+    }
+
+    /* Motion safety */
+    @media (prefers-reduced-motion: reduce){
+      .rail{animation: none}
+      .btn,.mini-btn,.navlink,.match,.team-card,.schedule-item,.links a{transition:none}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="Tournament brand">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <div>
+          <h1>NEON CIRCUIT</h1>
+          <small id="tzPill">Local time • detecting…</small>
+        </div>
+      </div>
+
+      <nav aria-label="Site sections">
+        <a class="navlink" href="#bracket">Bracket</a>
+        <a class="navlink" href="#schedule">Schedule</a>
+        <a class="navlink" href="#teams">Teams</a>
+        <a class="navlink" href="#stream">Stream</a>
+        <a class="navlink" href="#venue">Venue</a>
+      </nav>
+
+      <div class="top-spacer"></div>
+
+      <div class="pill" title="Demo status">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="demoStatus">Demo mode: OFF</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="top" aria-label="Hero">
+      <div class="hero-shell">
+        <canvas id="heroCanvas" aria-label="Animated backdrop"></canvas>
+        <div class="scanlines" aria-hidden="true"></div>
+        <div class="glow-edge" aria-hidden="true"></div>
+
+        <div class="hero-content">
+          <div class="hero-left">
+            <div class="kicker">
+              <span class="dot" aria-hidden="true"></span>
+              <span><b>LAN Finals</b> • High-contrast • Neon night</span>
+            </div>
+
+            <h2 class="headline">
+              The <span class="neon">Esports Tournament</span><br/>
+              built for the highlight reel.
+            </h2>
+
+            <div class="hero-meta">
+              <div class="meta-chip" title="Tournament date">
+                <span aria-hidden="true">📅</span>
+                <span><code id="tourDate">NOV 29–30, 2025</code></span>
+              </div>
+              <div class="meta-chip" title="Venue">
+                <span aria-hidden="true">📍</span>
+                <span><code>Nova Arena — Downtown</code></span>
+              </div>
+              <div class="meta-chip" title="Prize pool">
+                <span aria-hidden="true">🏆</span>
+                <span><code>$50,000 Prize Pool</code></span>
+              </div>
+              <div class="meta-chip" title="Format">
+                <span aria-hidden="true">🧩</span>
+                <span><code>16 teams • single elim</code></span>
+              </div>
+            </div>
+
+            <div class="hero-cta" role="group" aria-label="Primary actions">
+              <button class="btn primary" id="btnRegister">
+                <span class="icon">R</span> Register Team
+              </button>
+              <button class="btn" id="btnTickets">
+                <span class="icon">T</span> Get Tickets
+              </button>
+              <a class="btn ghost" href="#stream">
+                <span class="icon">▶</span> Watch Live
+              </a>
+            </div>
+
+            <p style="margin:12px 0 0; color: rgba(255,255,255,.62); font-size: 13px; max-width: 70ch; line-height:1.5">
+              Bracket updates in real-time (demo mode available). Schedule is timezone-aware. One-click ICS exports. Compare rosters like a coach.
+            </p>
+          </div>
+
+          <aside class="hero-right" aria-label="Quick info">
+            <div class="hero-panel">
+              <h3>CHECK-IN + RULESETS</h3>
+              <p>
+                Team check-in opens <span class="tag day-tag" id="checkInLocal">—</span>.
+                Seeded by power rating + region locks. Best-of-1 until Finals (Bo3).
+              </p>
+              <div class="hero-stats" aria-label="Key stats">
+                <div class="stat">
+                  <b id="teamCountStat">16</b>
+                  <small>Teams</small>
+                </div>
+                <div class="stat">
+                  <b id="matchCountStat">15</b>
+                  <small>Matches</small>
+                </div>
+              </div>
+              <div class="tiny-row">
+                <span class="tiny" id="localTZ">TZ: —</span>
+                <span class="tiny" id="localTime">Now: —</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BRACKET ===== -->
+    <section id="bracket" aria-label="Bracket section">
+      <div class="section-head">
+        <div>
+          <h3 class="section-title">Interactive Bracket</h3>
+          <p class="section-sub">
+            Hover matches for neon focus. Click a team to set the winner. Toggle demo mode to auto-advance the bracket.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="toolbar" style="padding:14px 14px 0">
+          <div class="left-tools">
+            <label class="toggle" title="Switch bracket size">
+              <input type="checkbox" id="toggle16" checked />
+              <span><b style="font-family:var(--mono); font-size:12px;">16-team</b> <span class="hint">(toggle for 8)</span></span>
+            </label>
+
+            <label class="toggle" title="Auto-advance demo">
+              <input type="checkbox" id="toggleDemo" />
+              <span><b style="font-family:var(--mono); font-size:12px;">Demo mode</b> <span class="hint">(auto picks winners)</span></span>
+            </label>
+
+            <span class="hint" id="bracketHint">Tip: Click a team row to advance it.</span>
+          </div>
+
+          <div class="right-tools">
+            <select class="select" id="tzSelect" title="Display times in selected timezone">
+              <option value="local">Timezone: Local</option>
+              <option value="America/Lima">America/Lima</option>
+              <option value="America/New_York">America/New_York</option>
+              <option value="America/Los_Angeles">America/Los_Angeles</option>
+              <option value="Europe/London">Europe/London</option>
+              <option value="Europe/Berlin">Europe/Berlin</option>
+              <option value="Asia/Tokyo">Asia/Tokyo</option>
+              <option value="Australia/Sydney">Australia/Sydney</option>
+            </select>
+            <button class="mini-btn" id="btnResetBracket" title="Reset bracket">
+              <span aria-hidden="true">↺</span> Reset
+            </button>
+            <button class="mini-btn" id="btnFullICS" title="Download full schedule as ICS">
+              <span aria-hidden="true">⬇</span> Full Schedule (ICS)
+            </button>
+          </div>
+        </div>
+
+        <div class="bracket-wrap" aria-label="Bracket viewer">
+          <div class="bracket" id="bracketGrid" role="application" aria-label="Bracket grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SCHEDULE ===== -->
+    <section id="schedule" aria-label="Schedule section">
+      <div class="section-head">
+        <div>
+          <h3 class="section-title">Schedule (Timezone-Aware)</h3>
+          <p class="section-sub">
+            Filter by stage and day. Times automatically render in your chosen timezone. Export any match to your calendar (ICS).
+          </p>
+        </div>
+      </div>
+
+      <div class="card schedule-wrap">
+        <div class="toolbar" style="padding:14px; margin:0">
+          <div class="left-tools">
+            <select class="select" id="stageFilter" title="Filter by stage">
+              <option value="all">Stage: All</option>
+            </select>
+            <select class="select" id="dayFilter" title="Filter by day">
+              <option value="all">Day: All</option>
+            </select>
+            <span class="hint" id="scheduleHint">Showing matches for your selected filters.</span>
+          </div>
+          <div class="right-tools">
+            <button class="mini-btn" id="btnAddDayICS" title="Download filtered schedule as ICS">
+              <span aria-hidden="true">📅</span> Add Filtered (ICS)
+            </button>
+          </div>
+        </div>
+        <div class="schedule-list" id="scheduleList" aria-label="Match schedule list"></div>
+      </div>
+    </section>
+
+    <!-- ===== TEAMS ===== -->
+    <section id="teams" aria-label="Teams section">
+      <div class="section-head">
+        <div>
+          <h3 class="section-title">Teams</h3>
+          <p class="section-sub">
+            Responsive roster cards with roles, flags, and form. Select up to two teams to quick-compare performance stats.
+          </p>
+        </div>
+      </div>
+
+      <div class="card teams-wrap">
+        <div class="teams-top">
+          <div class="left-tools">
+            <input class="search" id="teamSearch" placeholder="Search teams / tags / country…" aria-label="Search teams" />
+            <span class="hint" id="teamCountHint">—</span>
+          </div>
+          <div class="right-tools">
+            <button class="mini-btn" id="btnClearCompare" title="Clear selected teams">
+              <span aria-hidden="true">✕</span> Clear Compare
+            </button>
+          </div>
+        </div>
+
+        <div class="teams-grid" id="teamsGrid" aria-label="Teams grid"></div>
+      </div>
+    </section>
+
+    <!-- ===== STREAM ===== -->
+    <section id="stream" aria-label="Stream section">
+      <div class="section-head">
+        <div>
+          <h3 class="section-title">Stream Preview</h3>
+          <p class="section-sub">
+            Embedded placeholder player with a “Now/Next” ticker and looping sponsor carousel.
+          </p>
+        </div>
+      </div>
+
+      <div class="card stream-wrap">
+        <div class="stream-grid">
+          <div class="playerBox" aria-label="Stream player placeholder">
+            <div class="playerInner">
+              <div class="playBadge" aria-hidden="true">▶</div>
+              <h3>Live Broadcast Placeholder</h3>
+              <p>
+                Drop your Twitch/YouTube embed here. The ticker below automatically rotates “Now / Next” items from the schedule.
+              </p>
+            </div>
+            <div class="ticker" aria-live="polite">
+              <span class="label" id="tickerLabel">NOW</span>
+              <span class="text" id="tickerText">Loading…</span>
+            </div>
+          </div>
+
+          <aside class="sidePanel" aria-label="Now next and sponsors">
+            <div class="head">
+              <h3>Now / Next</h3>
+              <span class="hint" id="nnTzHint">TZ: —</span>
+            </div>
+            <div class="nowNext" id="nowNextList"></div>
+
+            <div class="head">
+              <h3>Sponsors</h3>
+              <span class="hint">carousel</span>
+            </div>
+            <div class="carousel" aria-label="Sponsor carousel">
+              <div class="rail" id="sponsorRail"></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== VENUE ===== -->
+    <section id="venue" aria-label="Venue & travel section">
+      <div class="section-head">
+        <div>
+          <h3 class="section-title">Venue & Travel</h3>
+          <p class="section-sub">
+            Map, directions, recommended hotels, plus accessibility and safety notes.
+          </p>
+        </div>
+      </div>
+
+      <div class="card venue-wrap">
+        <div class="venue-grid">
+          <div class="mapBox" aria-label="Venue map">
+            <!-- Inline SVG map placeholder (no external assets) -->
+            <svg viewBox="0 0 1200 700" role="img" aria-label="Stylized venue map placeholder">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1">
+                  <stop offset="0" stop-color="rgba(0,229,255,.28)"/>
+                  <stop offset="1" stop-color="rgba(255,43,214,.22)"/>
+                </linearGradient>
+                <radialGradient id="rg" cx="50%" cy="45%" r="65%">
+                  <stop offset="0" stop-color="rgba(255,255,255,.06)"/>
+                  <stop offset="1" stop-color="rgba(0,0,0,0)"/>
+                </radialGradient>
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="6" result="b"/>
+                  <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <rect x="0" y="0" width="1200" height="700" fill="rgba(0,0,0,.22)"/>
+              <rect x="0" y="0" width="1200" height="700" fill="url(#rg)"/>
+              <!-- "roads" -->
+              <path d="M0,520 C220,480 320,420 530,410 C760,400 850,480 1200,470"
+                    fill="none" stroke="rgba(255,255,255,.10)" stroke-width="10" stroke-linecap="round"/>
+              <path d="M60,120 C220,220 360,240 500,250 C690,265 780,190 910,150 C1040,110 1090,160 1200,230"
+                    fill="none" stroke="rgba(255,255,255,.10)" stroke-width="8" stroke-linecap="round"/>
+              <path d="M220,700 C250,540 340,470 460,420 C610,357 810,340 980,300 C1110,270 1150,220 1200,190"
+                    fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8" stroke-linecap="round"/>
+              <!-- blocks -->
+              <g opacity=".85">
+                <rect x="120" y="300" width="220" height="140" rx="22" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.10)" />
+                <rect x="400" y="120" width="290" height="170" rx="22" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.10)" />
+                <rect x="760" y="370" width="340" height="190" rx="22" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.10)" />
+              </g>
+              <!-- venue marker -->
+              <g transform="translate(685,380)" filter="url(#glow)">
+                <circle r="44" fill="rgba(0,229,255,.12)" stroke="rgba(0,229,255,.55)" stroke-width="2"/>
+                <circle r="22" fill="url(#g1)" stroke="rgba(255,255,255,.20)" stroke-width="2"/>
+                <circle r="8" fill="rgba(255,255,255,.85)"/>
+              </g>
+              <text x="730" y="388" fill="rgba(255,255,255,.82)" font-family="ui-monospace, Menlo, monospace" font-size="18">
+                Nova Arena
+              </text>
+            </svg>
+
+            <div class="loc">
+              <div>
+                <b id="venueName">Nova Arena</b>
+                <div><span id="venueAddr">123 Neon Blvd, Downtown</span></div>
+              </div>
+              <div class="links" aria-label="Directions links">
+                <a id="gmapsLink" href="#" target="_blank" rel="noopener">Google Maps</a>
+                <a id="walkLink" href="#" target="_blank" rel="noopener">Walking</a>
+                <a id="transitLink" href="#" target="_blank" rel="noopener">Transit</a>
+                <a id="rideLink" href="#" target="_blank" rel="noopener">Ride</a>
+              </div>
+            </div>
+          </div>
+
+          <aside class="travelPanel" aria-label="Travel and notes">
+            <div class="head">
+              <h3>Hotels & Notes</h3>
+            </div>
+            <div class="body">
+              <div class="hotel">
+                <div>
+                  <b>Vanta Hotel</b>
+                  <div style="color: rgba(255,255,255,.60); font-size:12px; margin-top:3px">5 min walk • gamer-rate</div>
+                </div>
+                <span>★★★☆</span>
+              </div>
+              <div class="hotel">
+                <div>
+                  <b>Pulse Suites</b>
+                  <div style="color: rgba(255,255,255,.60); font-size:12px; margin-top:3px">8 min ride • breakfast</div>
+                </div>
+                <span>★★★★</span>
+              </div>
+              <div class="hotel">
+                <div>
+                  <b>Arcade Residency</b>
+                  <div style="color: rgba(255,255,255,.60); font-size:12px; margin-top:3px">quiet rooms • late checkout</div>
+                </div>
+                <span>★★★</span>
+              </div>
+
+              <div class="note">
+                <b style="display:block; margin-bottom:6px; color: rgba(255,255,255,.86)">Accessibility</b>
+                Step-free entrance • accessible seating zone • caption screens on request • quiet room near Hall B.
+              </div>
+
+              <div class="note">
+                <b style="display:block; margin-bottom:6px; color: rgba(255,255,255,.86)">Safety</b>
+                Bag checks at entry • medical desk inside lobby • hydrate between matches • follow staff directions during crowd flows.
+              </div>
+
+              <div class="note">
+                <b style="display:block; margin-bottom:6px; color: rgba(255,255,255,.86)">What to bring</b>
+                Photo ID • ticket QR • light jacket (AC) • ear protection if sensitive to loud audio.
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <footer aria-label="Footer">
+      <div class="footerline">
+        <div>© <span id="year"></span> Neon Circuit. All visuals are demo placeholders.</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+          <span class="hint">Keyboard friendly • Reduced-motion aware • ICS export ready</span>
+          <a class="navlink" href="#top">Back to top</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ===== Compare Drawer ===== -->
+  <div class="drawer" id="compareDrawer" aria-label="Compare drawer" role="region" aria-live="polite">
+    <div class="drawer-head">
+      <b>Quick Compare</b>
+      <div class="drawer-actions">
+        <button class="mini-btn" id="btnSwapCompare" title="Swap sides">⇄ Swap</button>
+        <button class="mini-btn" id="btnCloseDrawer" title="Close compare">✕ Close</button>
+      </div>
+    </div>
+    <div class="drawer-body" id="compareBody"></div>
+  </div>
+
+  <!-- ===== Modal (Register / Tickets) ===== -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Modal dialog">
+    <div class="modalCard">
+      <div class="modalHead">
+        <b id="modalTitle">Modal</b>
+        <button class="mini-btn" id="btnModalClose" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modalBody" id="modalBody"></div>
+      <div class="modalActions">
+        <button class="btn ghost" id="btnModalCancel">Cancel</button>
+        <button class="btn primary" id="btnModalSubmit">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Toast ===== -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <b id="toastTitle">Ready</b>
+    <p id="toastMsg">—</p>
+  </div>
+
+  <script>
+    /* ==========================================================
+      Data (teams, schedule) — Feel free to replace with real data
+    ========================================================== */
+    const FLAGS = {
+      PE: "🇵🇪", US: "🇺🇸", BR: "🇧🇷", MX: "🇲🇽", JP: "🇯🇵", KR: "🇰🇷",
+      DE: "🇩🇪", FR: "🇫🇷", GB: "🇬🇧", ES: "🇪🇸", CA: "🇨🇦", SE: "🇸🇪",
+      AU: "🇦🇺", AR: "🇦🇷", CL: "🇨🇱", CO: "🇨🇴"
+    };
+
+    function svgLogoDataUri(seed, text){
+      // deterministic-ish neon logo SVG (no external files)
+      const hues = [190, 314, 95, 265, 28, 140, 210, 330];
+      const h1 = hues[seed % hues.length];
+      const h2 = hues[(seed+3) % hues.length];
+      const bg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="hsla(${h1},100%,60%,0.95)"/>
+              <stop offset="1" stop-color="hsla(${h2},100%,60%,0.85)"/>
+            </linearGradient>
+            <radialGradient id="r" cx="30%" cy="25%" r="70%">
+              <stop offset="0" stop-color="rgba(255,255,255,0.35)"/>
+              <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="64" height="64" rx="18" fill="rgba(255,255,255,0.04)"/>
+          <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#g)"/>
+          <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#r)"/>
+          <path d="M16 44 C 22 24, 42 24, 48 44" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3" stroke-linecap="round"/>
+          <text x="32" y="38" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="18" fill="rgba(0,0,0,0.65)">${text}</text>
+        </svg>
+      `.trim();
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(bg);
+    }
+
+    const teams16 = [
+      mkTeam(1,  "Vanta Vipers",     "VV", "PE", 78, 1.08, ["W","W","L","W","W"]),
+      mkTeam(2,  "Arc Nova",         "AN", "US", 81, 1.12, ["W","W","W","L","W"]),
+      mkTeam(3,  "Pulse Hydra",      "PH", "BR", 76, 1.04, ["L","W","W","W","L"]),
+      mkTeam(4,  "Crimson Circuit",  "CC", "MX", 72, 1.02, ["W","L","W","L","W"]),
+      mkTeam(5,  "Glitch Ronin",     "GR", "JP", 83, 1.15, ["W","W","W","W","L"]),
+      mkTeam(6,  "Kyo Specters",     "KS", "KR", 80, 1.10, ["L","W","W","L","W"]),
+      mkTeam(7,  "Berlin Byte",      "BB", "DE", 70, 0.98, ["W","L","L","W","D"]),
+      mkTeam(8,  "Paris Photon",     "PP", "FR", 74, 1.03, ["W","D","W","L","W"]),
+      mkTeam(9,  "London Lancers",   "LL", "GB", 69, 0.97, ["L","W","L","L","W"]),
+      mkTeam(10, "Sevilla Static",   "SS", "ES", 71, 1.00, ["W","W","L","D","L"]),
+      mkTeam(11, "Northstar Nitro",  "NN", "CA", 73, 1.01, ["W","L","W","W","L"]),
+      mkTeam(12, "Stockholm Shade",  "SH", "SE", 77, 1.06, ["W","W","L","W","D"]),
+      mkTeam(13, "Sydney Synapse",   "SY", "AU", 75, 1.05, ["L","W","W","L","W"]),
+      mkTeam(14, "Andes Apex",       "AA", "AR", 68, 0.95, ["W","L","W","L","L"]),
+      mkTeam(15, "Valpo Volt",       "VV2","CL", 67, 0.94, ["L","L","W","W","L"]),
+      mkTeam(16, "Bogotá Bloom",     "BB2","CO", 66, 0.93, ["W","L","L","W","L"]),
+    ];
+
+    const teams8 = teams16.slice(0,8);
+
+    function mkTeam(seed, name, tag, country, power, kd, formArr){
+      const roles = ["IGL","Entry","Flex","Support","AWPer"];
+      const roster = Array.from({length:5}, (_,i)=>({
+        nick: `${tag}_${["alpha","bolt","cipher","dusk","echo"][i]}`,
+        role: roles[i]
+      }));
+      const winrate = clamp(0.35 + (power-60)/100, 0.35, 0.85);
+      const streak = calcStreak(formArr);
+      return {
+        seed, name, tag, country, flag: FLAGS[country] || "🏳️",
+        logo: svgLogoDataUri(seed, tag.replace(/[^\w]/g,"").slice(0,2)),
+        roster,
+        power,
+        kd,
+        winrate,
+        streak,
+        form: formArr,
+        region: countryToRegion(country)
+      };
+    }
+
+    function calcStreak(form){
+      // returns like "W3" or "L2" or "D1"
+      if(!form?.length) return "—";
+      let last = form[form.length-1];
+      let count = 1;
+      for(let i=form.length-2;i>=0;i--){
+        if(form[i]===last) count++;
+        else break;
+      }
+      return `${last}${count}`;
+    }
+
+    function countryToRegion(cc){
+      const AM = new Set(["PE","US","BR","MX","CA","AR","CL","CO"]);
+      const EU = new Set(["DE","FR","GB","ES","SE"]);
+      const AP = new Set(["JP","KR","AU"]);
+      if(AM.has(cc)) return "AMER";
+      if(EU.has(cc)) return "EMEA";
+      if(AP.has(cc)) return "APAC";
+      return "INTL";
+    }
+
+    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+
+    // Tournament dates (UTC) — tweak as needed
+    // NOTE: Using 2025-11-29/30 so it looks "current-ish" for Nov 2025.
+    const TOURNAMENT = {
+      name: "Neon Circuit — LAN Finals",
+      venue: "Nova Arena, 123 Neon Blvd, Downtown",
+      // a "check-in" moment for the hero panel
+      checkInUtc: "2025-11-29T14:00:00Z"
+    };
+
+    // Build a demo schedule from the bracket (updated in render)
+    // We'll still keep a base schedule for “Now/Next” and the schedule list.
+    const scheduleBase = [
+      // Day 1 — Round of 16 (8 matches)
+      mkMatch("m1",  "Round of 16", "2025-11-29", "2025-11-29T16:00:00Z", "2025-11-29T16:45:00Z", 1, 16),
+      mkMatch("m2",  "Round of 16", "2025-11-29", "2025-11-29T17:00:00Z", "2025-11-29T17:45:00Z", 8, 9),
+      mkMatch("m3",  "Round of 16", "2025-11-29", "2025-11-29T18:00:00Z", "2025-11-29T18:45:00Z", 5, 12),
+      mkMatch("m4",  "Round of 16", "2025-11-29", "2025-11-29T19:00:00Z", "2025-11-29T19:45:00Z", 4, 13),
+      mkMatch("m5",  "Round of 16", "2025-11-29", "2025-11-29T20:00:00Z", "2025-11-29T20:45:00Z", 2, 15),
+      mkMatch("m6",  "Round of 16", "2025-11-29", "2025-11-29T21:00:00Z", "2025-11-29T21:45:00Z", 7, 10),
+      mkMatch("m7",  "Round of 16", "2025-11-29", "2025-11-29T22:00:00Z", "2025-11-29T22:45:00Z", 3, 14),
+      mkMatch("m8",  "Round of 16", "2025-11-29", "2025-11-29T23:00:00Z", "2025-11-29T23:45:00Z", 6, 11),
+
+      // Day 2 — Quarters, Semis, Final
+      mkMatch("q1", "Quarterfinal", "2025-11-30", "2025-11-30T16:00:00Z", "2025-11-30T16:55:00Z", null, null),
+      mkMatch("q2", "Quarterfinal", "2025-11-30", "2025-11-30T17:10:00Z", "2025-11-30T18:05:00Z", null, null),
+      mkMatch("q3", "Quarterfinal", "2025-11-30", "2025-11-30T18:20:00Z", "2025-11-30T19:15:00Z", null, null),
+      mkMatch("q4", "Quarterfinal", "2025-11-30", "2025-11-30T19:30:00Z", "2025-11-30T20:25:00Z", null, null),
+
+      mkMatch("s1", "Semifinal", "2025-11-30", "2025-11-30T21:00:00Z", "2025-11-30T22:10:00Z", null, null),
+      mkMatch("s2", "Semifinal", "2025-11-30", "2025-11-30T22:25:00Z", "2025-11-30T23:35:00Z", null, null),
+
+      mkMatch("f", "Grand Final (Bo3)", "2025-11-30", "2025-12-01T00:10:00Z", "2025-12-01T01:50:00Z", null, null),
+    ];
+
+    function mkMatch(id, stage, day, startUtc, endUtc, seedA, seedB){
+      return {
+        id, stage, day,
+        startUtc, endUtc,
+        seedA, seedB,
+        // stream meta placeholders
+        stream: "Main Stage",
+        bestOf: stage.includes("Final") ? 3 : (stage.includes("Semi") ? 3 : 1)
+      };
+    }
+
+    /* ==========================================================
+      State
+    ========================================================== */
+    const state = {
+      tz: "local",
+      use16: true,
+      demo: false,
+      teams: teams16,
+      compare: [],
+      bracket: null,  // will hold rounds + winners
+      schedule: [...scheduleBase]
+    };
+
+    /* ==========================================================
+      Timezone helpers
+    ========================================================== */
+    function getLocalTz(){
+      try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "local"; }
+      catch { return "local"; }
+    }
+
+    function formatDateTime(isoUtc, tz){
+      const d = new Date(isoUtc);
+      const opts = {
+        weekday: "short",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: tz === "local" ? undefined : tz
+      };
+      const s = new Intl.DateTimeFormat(undefined, opts).format(d);
+      const tzName = tz === "local"
+        ? (Intl.DateTimeFormat().resolvedOptions().timeZone || "Local")
+        : tz;
+      return { text: s, tzName };
+    }
+
+    function formatTime(isoUtc, tz){
+      const d = new Date(isoUtc);
+      const opts = { hour: "2-digit", minute:"2-digit", hour12:false, timeZone: tz === "local" ? undefined : tz };
+      return new Intl.DateTimeFormat(undefined, opts).format(d);
+    }
+
+    function formatDayLabel(dayStr){
+      // dayStr is YYYY-MM-DD
+      const d = new Date(dayStr + "T00:00:00Z");
+      const opts = { weekday:"short", month:"short", day:"2-digit" };
+      return new Intl.DateTimeFormat(undefined, opts).format(d);
+    }
+
+    /* ==========================================================
+      Bracket modeling (single elim)
+    ========================================================== */
+    function buildInitialBracket(teams){
+      // 16: 8 matches, 4,2,1
+      // 8:  4 matches, 2,1
+      const seeds = teams.map(t => t.seed);
+      const bySeed = new Map(teams.map(t => [t.seed, t]));
+
+      const is16 = teams.length === 16;
+      const round1Pairs = is16
+        ? [[1,16],[8,9],[5,12],[4,13],[2,15],[7,10],[3,14],[6,11]]
+        : [[1,8],[4,5],[2,7],[3,6]];
+
+      const rounds = [];
+      rounds.push(round1Pairs.map((p,i)=> mkBracketMatch(`r1_${i+1}`, p[0], p[1], null)));
+
+      const r2Count = Math.floor(round1Pairs.length / 2);
+      rounds.push(Array.from({length:r2Count}, (_,i)=> mkBracketMatch(`r2_${i+1}`, null, null, null))); // quarters
+      const r3Count = Math.floor(r2Count / 2);
+      rounds.push(Array.from({length:r3Count}, (_,i)=> mkBracketMatch(`r3_${i+1}`, null, null, null))); // semis
+      rounds.push([mkBracketMatch(`r4_1`, null, null, null)]); // final
+
+      return { bySeed, rounds, is16, winnerSeed: null };
+    }
+
+    function mkBracketMatch(id, seedA, seedB, winnerSeed){
+      return { id, seedA, seedB, winnerSeed };
+    }
+
+    function setWinner(br, roundIndex, matchIndex, winnerSeed){
+      const match = br.rounds[roundIndex][matchIndex];
+      match.winnerSeed = winnerSeed;
+
+      // propagate to next round slot
+      if(roundIndex >= br.rounds.length - 1){
+        br.winnerSeed = winnerSeed;
+        return;
+      }
+      const nextRound = br.rounds[roundIndex + 1];
+      const nextMatchIndex = Math.floor(matchIndex / 2);
+      const isTopSlot = (matchIndex % 2 === 0);
+      const nextMatch = nextRound[nextMatchIndex];
+
+      if(isTopSlot) nextMatch.seedA = winnerSeed;
+      else nextMatch.seedB = winnerSeed;
+
+      // when changing earlier results, invalidate downstream winners (to keep consistent)
+      invalidateDownstream(br, roundIndex + 1, nextMatchIndex);
+    }
+
+    function invalidateDownstream(br, startRound, startMatch){
+      // clears winners from startRound/startMatch and all dependent matches forward
+      for(let r=startRound; r<br.rounds.length; r++){
+        const round = br.rounds[r];
+        for(let m=0; m<round.length; m++){
+          // Only invalidate downstream from the affected match and all ahead.
+          if(r === startRound && m < startMatch) continue;
+          round[m].winnerSeed = null;
+          if(r < br.rounds.length - 1){
+            // clear next round seeds that derive from this match
+            const nr = br.rounds[r+1];
+            const nmi = Math.floor(m/2);
+            const top = (m%2===0);
+            if(nr[nmi]){
+              if(top) nr[nmi].seedA = null;
+              else nr[nmi].seedB = null;
+            }
+          }
+        }
+      }
+      br.winnerSeed = null;
+    }
+
+    function pickWinnerWeighted(teamA, teamB){
+      if(!teamA && !teamB) return null;
+      if(teamA && !teamB) return teamA.seed;
+      if(!teamA && teamB) return teamB.seed;
+
+      const aScore = (teamA.power * 0.75) + (teamA.kd * 20) + (teamA.winrate * 35);
+      const bScore = (teamB.power * 0.75) + (teamB.kd * 20) + (teamB.winrate * 35);
+      const total = aScore + bScore;
+      const r = Math.random() * total;
+      return (r < aScore) ? teamA.seed : teamB.seed;
+    }
+
+    /* ==========================================================
+      Schedule updates based on bracket winners (for display)
+    ========================================================== */
+    function syncScheduleFromBracket(){
+      // For a demo, map bracket seeds into scheduleBase quarter/semi/final placeholders by match order.
+      // Round of 16 / Quarter mapping stays consistent with round index.
+      const br = state.bracket;
+      if(!br) return;
+
+      const is16 = br.is16;
+      const bySeed = br.bySeed;
+
+      // Update matches m1..m8 or 8-bracket equivalents
+      const r1 = br.rounds[0];
+
+      // If 8-team, we'll only show 4 "Round of 8" matches on day 1 and hide the rest.
+      // We'll keep schedule list filtered by "use16".
+      const round1Ids = is16 ? ["m1","m2","m3","m4","m5","m6","m7","m8"] : ["m1","m2","m3","m4"];
+
+      for(let i=0;i<round1Ids.length;i++){
+        const m = state.schedule.find(x => x.id === round1Ids[i]);
+        if(!m) continue;
+        m.seedA = r1[i]?.seedA ?? null;
+        m.seedB = r1[i]?.seedB ?? null;
+      }
+
+      // quarters = rounds[1]
+      const q = br.rounds[1];
+      const qIds = ["q1","q2","q3","q4"].slice(0, q.length);
+      for(let i=0;i<qIds.length;i++){
+        const m = state.schedule.find(x => x.id === qIds[i]);
+        if(!m) continue;
+        m.seedA = q[i]?.seedA ?? null;
+        m.seedB = q[i]?.seedB ?? null;
+      }
+
+      // semis = rounds[2]
+      const s = br.rounds[2];
+      const sIds = ["s1","s2"].slice(0, s.length);
+      for(let i=0;i<sIds.length;i++){
+        const m = state.schedule.find(x => x.id === sIds[i]);
+        if(!m) continue;
+        m.seedA = s[i]?.seedA ?? null;
+        m.seedB = s[i]?.seedB ?? null;
+      }
+
+      // final = rounds[3]
+      const fin = br.rounds[3]?.[0];
+      const fm = state.schedule.find(x => x.id === "f");
+      if(fm && fin){
+        fm.seedA = fin.seedA ?? null;
+        fm.seedB = fin.seedB ?? null;
+      }
+    }
+
+    /* ==========================================================
+      Rendering
+    ========================================================== */
+    const els = {
+      tzPill: document.getElementById("tzPill"),
+      localTZ: document.getElementById("localTZ"),
+      localTime: document.getElementById("localTime"),
+      checkInLocal: document.getElementById("checkInLocal"),
+
+      toggle16: document.getElementById("toggle16"),
+      toggleDemo: document.getElementById("toggleDemo"),
+      demoStatus: document.getElementById("demoStatus"),
+      tzSelect: document.getElementById("tzSelect"),
+
+      bracketGrid: document.getElementById("bracketGrid"),
+      btnResetBracket: document.getElementById("btnResetBracket"),
+      btnFullICS: document.getElementById("btnFullICS"),
+
+      stageFilter: document.getElementById("stageFilter"),
+      dayFilter: document.getElementById("dayFilter"),
+      scheduleList: document.getElementById("scheduleList"),
+      btnAddDayICS: document.getElementById("btnAddDayICS"),
+
+      teamsGrid: document.getElementById("teamsGrid"),
+      teamSearch: document.getElementById("teamSearch"),
+      teamCountHint: document.getElementById("teamCountHint"),
+      btnClearCompare: document.getElementById("btnClearCompare"),
+
+      compareDrawer: document.getElementById("compareDrawer"),
+      compareBody: document.getElementById("compareBody"),
+      btnCloseDrawer: document.getElementById("btnCloseDrawer"),
+      btnSwapCompare: document.getElementById("btnSwapCompare"),
+
+      tickerLabel: document.getElementById("tickerLabel"),
+      tickerText: document.getElementById("tickerText"),
+      nowNextList: document.getElementById("nowNextList"),
+      nnTzHint: document.getElementById("nnTzHint"),
+
+      sponsorRail: document.getElementById("sponsorRail"),
+
+      teamCountStat: document.getElementById("teamCountStat"),
+      matchCountStat: document.getElementById("matchCountStat"),
+
+      btnRegister: document.getElementById("btnRegister"),
+      btnTickets: document.getElementById("btnTickets"),
+
+      modal: document.getElementById("modal"),
+      modalTitle: document.getElementById("modalTitle"),
+      modalBody: document.getElementById("modalBody"),
+      btnModalClose: document.getElementById("btnModalClose"),
+      btnModalCancel: document.getElementById("btnModalCancel"),
+      btnModalSubmit: document.getElementById("btnModalSubmit"),
+
+      toast: document.getElementById("toast"),
+      toastTitle: document.getElementById("toastTitle"),
+      toastMsg: document.getElementById("toastMsg"),
+
+      year: document.getElementById("year"),
+
+      venueName: document.getElementById("venueName"),
+      venueAddr: document.getElementById("venueAddr"),
+      gmapsLink: document.getElementById("gmapsLink"),
+      walkLink: document.getElementById("walkLink"),
+      transitLink: document.getElementById("transitLink"),
+      rideLink: document.getElementById("rideLink")
+    };
+
+    function renderAll(){
+      renderTopMeta();
+      renderBracket();
+      syncScheduleFromBracket();
+      renderScheduleFilters();
+      renderSchedule();
+      renderTeams();
+      renderCompareDrawer();
+      renderNowNext();
+      renderSponsors();
+      updateStats();
+    }
+
+    function updateStats(){
+      const teamCount = state.teams.length;
+      const matchCount = teamCount - 1;
+      els.teamCountStat.textContent = String(teamCount);
+      els.matchCountStat.textContent = String(matchCount);
+      document.getElementById("tourDate").textContent = "NOV 29–30, 2025";
+    }
+
+    function renderTopMeta(){
+      const tzLocal = getLocalTz();
+      els.localTZ.textContent = `TZ: ${tzLocal}`;
+      els.tzPill.textContent = `Local time • ${tzLocal}`;
+
+      // local clock tick
+      tickClock();
+
+      // check-in label in chosen tz display (use local)
+      const check = formatDateTime(TOURNAMENT.checkInUtc, "local");
+      els.checkInLocal.textContent = `${check.text}`;
+      els.checkInLocal.classList.add("tag","day-tag");
+    }
+
+    function renderBracket(){
+      const br = state.bracket;
+      const bySeed = br.bySeed;
+
+      const roundNames = br.is16
+        ? ["Round of 16","Quarterfinals","Semifinals","Grand Final"]
+        : ["Quarterfinals","Semifinals","Grand Final","Champion"];
+
+      // Clear
+      els.bracketGrid.innerHTML = "";
+
+      br.rounds.forEach((round, rIdx)=>{
+        const col = document.createElement("div");
+        col.className = "round";
+
+        const title = document.createElement("div");
+        title.className = "round-title";
+        title.textContent = (rIdx === br.rounds.length - 1)
+          ? "Final"
+          : (roundNames[rIdx] || `Round ${rIdx+1}`);
+        col.appendChild(title);
+
+        round.forEach((m, mIdx)=>{
+          const teamA = m.seedA ? bySeed.get(m.seedA) : null;
+          const teamB = m.seedB ? bySeed.get(m.seedB) : null;
+
+          const match = document.createElement("div");
+          match.className = "match";
+          match.dataset.mid = m.id;
+
+          const head = document.createElement("div");
+          head.className = "match-head";
+
+          const label = document.createElement("div");
+          label.textContent = `Match ${m.id.toUpperCase()}`;
+
+          const time = document.createElement("div");
+          time.className = "time";
+          const linked = matchIdToSchedule(m.id);
+          time.textContent = linked ? formatTime(linked.startUtc, state.tz) : "TBD";
+          head.append(label, time);
+
+          const body = document.createElement("div");
+          body.className = "match-body";
+
+          const rowA = mkTeamRow(teamA, m, (m.winnerSeed && teamA && m.winnerSeed === teamA.seed), () => {
+            if(!teamA) return;
+            setWinner(br, rIdx, mIdx, teamA.seed);
+            syncScheduleFromBracket();
+            renderAll();
+            toast("Bracket updated", `Advanced ${teamA.name} (${teamA.tag}).`);
+          });
+
+          const rowB = mkTeamRow(teamB, m, (m.winnerSeed && teamB && m.winnerSeed === teamB.seed), () => {
+            if(!teamB) return;
+            setWinner(br, rIdx, mIdx, teamB.seed);
+            syncScheduleFromBracket();
+            renderAll();
+            toast("Bracket updated", `Advanced ${teamB.name} (${teamB.tag}).`);
+          });
+
+          body.append(rowA, rowB);
+
+          const actions = document.createElement("div");
+          actions.className = "match-actions";
+          const btnICS = document.createElement("button");
+          btnICS.className = "mini-btn";
+          btnICS.innerHTML = `<span aria-hidden="true">📅</span> Add to calendar`;
+          btnICS.addEventListener("click", ()=>{
+            const sched = matchIdToSchedule(m.id);
+            if(!sched){
+              toast("No time assigned", "This match does not have a scheduled time yet.");
+              return;
+            }
+            const ics = buildIcsForMatches([enrichScheduleMatch(sched)]);
+            downloadText(`${TOURNAMENT.name} — ${sched.stage}.ics`, ics, "text/calendar");
+            toast("ICS downloaded", `Added ${sched.stage} to your calendar.`);
+          });
+
+          const btnAuto = document.createElement("button");
+          btnAuto.className = "mini-btn";
+          btnAuto.innerHTML = `<span aria-hidden="true">⚡</span> Pick winner`;
+          btnAuto.addEventListener("click", ()=>{
+            const winSeed = pickWinnerWeighted(teamA, teamB);
+            if(!winSeed){
+              toast("Not ready", "Both teams must be known to pick a winner.");
+              return;
+            }
+            setWinner(br, rIdx, mIdx, winSeed);
+            syncScheduleFromBracket();
+            renderAll();
+          });
+
+          actions.append(btnICS, btnAuto);
+
+          // match state
+          if(teamA && teamB && !m.winnerSeed) match.dataset.state = "ready";
+          if(m.winnerSeed) match.dataset.state = "done";
+
+          match.append(head, body, actions);
+          col.appendChild(match);
+        });
+
+        els.bracketGrid.appendChild(col);
+      });
+    }
+
+    function mkTeamRow(team, match, isWinner, onClick){
+      const row = document.createElement("div");
+      row.className = "team-row";
+      row.tabIndex = 0;
+      row.dataset.win = isWinner ? "1" : "0";
+
+      const left = document.createElement("div");
+      left.className = "team-left";
+
+      const logo = document.createElement("div");
+      logo.className = "logo";
+      if(team){
+        const img = document.createElement("img");
+        img.alt = `${team.name} logo`;
+        img.src = team.logo;
+        logo.appendChild(img);
+      } else {
+        logo.textContent = "—";
+      }
+
+      const name = document.createElement("div");
+      name.className = "tname";
+      const b = document.createElement("b");
+      b.textContent = team ? team.name : "TBD";
+      const s = document.createElement("small");
+      s.textContent = team ? `${team.flag} ${team.tag} • Seed ${team.seed}` : "Awaiting previous match";
+      name.append(b,s);
+
+      left.append(logo, name);
+
+      const right = document.createElement("div");
+      right.className = "score";
+      const perf = document.createElement("span");
+      perf.className = "badge";
+      perf.textContent = team ? `PWR ${team.power}` : "—";
+      const kd = document.createElement("span");
+      kd.className = "badge";
+      kd.textContent = team ? `K/D ${team.kd.toFixed(2)}` : "—";
+
+      right.append(perf, kd);
+
+      row.append(left, right);
+
+      row.addEventListener("click", onClick);
+      row.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          onClick();
+        }
+      });
+
+      return row;
+    }
+
+    function renderScheduleFilters(){
+      // Populate stage/day filters based on schedule (and bracket size).
+      const schedule = getVisibleSchedule();
+      const stages = [...new Set(schedule.map(m => m.stage))];
+      const days = [...new Set(schedule.map(m => m.day))];
+
+      // stages
+      const stageVal = els.stageFilter.value || "all";
+      els.stageFilter.innerHTML = `<option value="all">Stage: All</option>` + stages.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("");
+      if(stages.includes(stageVal)) els.stageFilter.value = stageVal;
+
+      // days
+      const dayVal = els.dayFilter.value || "all";
+      els.dayFilter.innerHTML = `<option value="all">Day: All</option>` + days.map(d=>`<option value="${d}">${formatDayLabel(d)}</option>`).join("");
+      if(days.includes(dayVal)) els.dayFilter.value = dayVal;
+    }
+
+    function renderSchedule(){
+      const schedule = getVisibleSchedule();
+      const stage = els.stageFilter.value || "all";
+      const day = els.dayFilter.value || "all";
+
+      const filtered = schedule
+        .filter(m => stage === "all" ? true : m.stage === stage)
+        .filter(m => day === "all" ? true : m.day === day)
+        .sort((a,b)=> new Date(a.startUtc) - new Date(b.startUtc));
+
+      els.scheduleList.innerHTML = "";
+
+      filtered.forEach(m=>{
+        const item = document.createElement("div");
+        item.className = "schedule-item";
+
+        const time = document.createElement("div");
+        time.className = "sched-time";
+        const start = formatDateTime(m.startUtc, state.tz);
+        time.innerHTML = `<div>${start.text}</div><small>${start.tzName}</small>`;
+
+        const mid = document.createElement("div");
+        mid.className = "sched-mid";
+
+        const teams = matchTeamsText(m);
+        const title = document.createElement("p");
+        title.className = "sched-title";
+        title.textContent = `${m.stage} • ${teams}`;
+
+        const sub = document.createElement("div");
+        sub.className = "sched-sub";
+        sub.innerHTML = `
+          <span class="tag stage-tag">${escapeHtml(m.stage)}</span>
+          <span class="tag day-tag">${escapeHtml(formatDayLabel(m.day))}</span>
+          <span class="tag">${escapeHtml(m.stream)}</span>
+          <span class="tag">Bo${m.bestOf}</span>
+        `;
+
+        mid.append(title, sub);
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const btnICS = document.createElement("button");
+        btnICS.className = "mini-btn";
+        btnICS.innerHTML = `<span aria-hidden="true">📅</span> Add to calendar`;
+        btnICS.addEventListener("click", ()=>{
+          const ics = buildIcsForMatches([enrichScheduleMatch(m)]);
+          downloadText(`${TOURNAMENT.name} — ${m.id}.ics`, ics, "text/calendar");
+          toast("ICS downloaded", `${m.stage}: ${teams}`);
+        });
+
+        const btnFocus = document.createElement("button");
+        btnFocus.className = "mini-btn";
+        btnFocus.innerHTML = `<span aria-hidden="true">🎯</span> Focus in bracket`;
+        btnFocus.addEventListener("click", ()=>{
+          // jump to bracket and flash the match if possible
+          location.hash = "#bracket";
+          setTimeout(()=>flashMatch(m.id), 120);
+        });
+
+        actions.append(btnICS, btnFocus);
+        item.append(time, mid, actions);
+        els.scheduleList.appendChild(item);
+      });
+
+      if(filtered.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "note";
+        empty.innerHTML = `<b style="display:block;color:rgba(255,255,255,.86);margin-bottom:6px">No matches found</b>
+                           Try clearing filters or switching bracket size.`;
+        els.scheduleList.appendChild(empty);
+      }
+    }
+
+    function renderTeams(){
+      const q = (els.teamSearch.value || "").trim().toLowerCase();
+      const list = state.teams
+        .filter(t=>{
+          if(!q) return true;
+          const hay = `${t.name} ${t.tag} ${t.country} ${t.region}`.toLowerCase();
+          return hay.includes(q);
+        })
+        .sort((a,b)=> a.seed - b.seed);
+
+      els.teamCountHint.textContent = `${list.length} team(s) shown • select up to 2 to compare`;
+
+      els.teamsGrid.innerHTML = "";
+      list.forEach(t=>{
+        const card = document.createElement("div");
+        card.className = "team-card";
+        if(state.compare.includes(t.seed)) card.classList.add("selected");
+
+        const head = document.createElement("div");
+        head.className = "team-card-head";
+
+        const left = document.createElement("div");
+        left.className = "left";
+
+        const logo = document.createElement("div");
+        logo.className = "logo";
+        const img = document.createElement("img");
+        img.alt = `${t.name} logo`;
+        img.src = t.logo;
+        logo.appendChild(img);
+
+        const name = document.createElement("div");
+        name.className = "name";
+        name.innerHTML = `
+          <b>${escapeHtml(t.name)}</b>
+          <small>
+            <span class="flag" aria-hidden="true">${t.flag}</span>
+            <span>${escapeHtml(t.tag)} • Seed ${t.seed} • ${escapeHtml(t.region)}</span>
+          </small>
+        `;
+
+        left.append(logo, name);
+
+        const btn = document.createElement("button");
+        btn.className = "compare-btn";
+        btn.innerHTML = `<span aria-hidden="true">⇄</span> ${state.compare.includes(t.seed) ? "Selected" : "Compare"}`;
+        btn.addEventListener("click", (e)=>{
+          e.stopPropagation();
+          toggleCompare(t.seed);
+        });
+
+        head.append(left, btn);
+
+        const body = document.createElement("div");
+        body.className = "team-card-body";
+
+        const roster = document.createElement("div");
+        roster.className = "roster";
+        roster.innerHTML = `
+          <h4>
+            <span>Roster</span>
+            <span class="tag">${escapeHtml(t.flag)} ${escapeHtml(t.country)}</span>
+          </h4>
+          <ul>
+            ${t.roster.map(p=>`
+              <li class="player">
+                <div><b>${escapeHtml(p.nick)}</b></div>
+                <span>${escapeHtml(p.role)}</span>
+              </li>
+            `).join("")}
+          </ul>
+        `;
+
+        const stats = document.createElement("div");
+        stats.className = "statsbox";
+        stats.innerHTML = `
+          <div class="metric"><span class="k">Power</span><span class="v">${t.power}</span></div>
+          <div class="metric"><span class="k">K/D</span><span class="v">${t.kd.toFixed(2)}</span></div>
+          <div class="metric"><span class="k">Winrate</span><span class="v">${Math.round(t.winrate*100)}%</span></div>
+          <div class="metric">
+            <span class="k">Recent form</span>
+            <span class="v">
+              <span class="form">
+                ${t.form.slice(-5).map(x=>{
+                  const cls = x==="W" ? "win" : (x==="L" ? "loss" : "draw");
+                  const label = x==="W" ? "W" : (x==="L" ? "L" : "D");
+                  return `<span class="chip ${cls}">${label}</span>`;
+                }).join("")}
+              </span>
+            </span>
+          </div>
+        `;
+
+        body.append(roster, stats);
+        card.append(head, body);
+
+        card.addEventListener("click", ()=>toggleCompare(t.seed));
+        els.teamsGrid.appendChild(card);
+      });
+    }
+
+    function renderCompareDrawer(){
+      const seeds = state.compare.slice(0,2);
+      if(seeds.length === 0){
+        els.compareDrawer.classList.remove("open");
+        els.compareBody.innerHTML = "";
+        return;
+      }
+      els.compareDrawer.classList.add("open");
+      els.compareBody.innerHTML = "";
+
+      const cards = seeds.map(seed => {
+        const t = state.teams.find(x=>x.seed===seed);
+        if(!t) return null;
+        return compareCard(t);
+      }).filter(Boolean);
+
+      // If only one, show a hint panel on the other side
+      if(cards.length === 1){
+        const placeholder = document.createElement("div");
+        placeholder.className = "compare-card";
+        placeholder.innerHTML = `
+          <div class="top">
+            <div class="left">
+              <div class="logo">—</div>
+              <b>Pick one more team</b>
+            </div>
+            <span class="tag">Up to 2</span>
+          </div>
+          <div class="rows">
+            <div class="row"><span class="k">Tip</span><span class="v">Click another card</span></div>
+            <div class="row"><span class="k">Why</span><span class="v">Compare power, K/D, winrate</span></div>
+            <div class="row"><span class="k">Shortcut</span><span class="v">Search above</span></div>
+          </div>
+        `;
+        cards.push(placeholder);
+      }
+
+      cards.forEach(c => els.compareBody.appendChild(c));
+    }
+
+    function compareCard(t){
+      const el = document.createElement("div");
+      el.className = "compare-card";
+      el.innerHTML = `
+        <div class="top">
+          <div class="left">
+            <div class="logo"><img alt="${escapeHtml(t.name)} logo" src="${t.logo}"/></div>
+            <div style="min-width:0">
+              <b style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">${escapeHtml(t.name)}</b>
+              <div style="color:rgba(255,255,255,.62); font-family:var(--mono); font-size:11px; margin-top:2px">
+                ${escapeHtml(t.flag)} ${escapeHtml(t.tag)} • Seed ${t.seed} • ${escapeHtml(t.region)}
+              </div>
+            </div>
+          </div>
+          <button class="mini-btn" data-remove="${t.seed}" title="Remove from compare">✕ Remove</button>
+        </div>
+        <div class="rows">
+          <div class="row"><span class="k">Power</span><span class="v">${t.power}</span></div>
+          <div class="row"><span class="k">K/D</span><span class="v">${t.kd.toFixed(2)}</span></div>
+          <div class="row"><span class="k">Winrate</span><span class="v">${Math.round(t.winrate*100)}%</span></div>
+          <div class="row"><span class="k">Streak</span><span class="v">${escapeHtml(t.streak)}</span></div>
+          <div class="row"><span class="k">Form</span><span class="v">${escapeHtml(t.form.join(" "))}</span></div>
+        </div>
+      `;
+
+      el.querySelector("[data-remove]")?.addEventListener("click", ()=>{
+        state.compare = state.compare.filter(s=>s!==t.seed);
+        renderTeams();
+        renderCompareDrawer();
+      });
+
+      return el;
+    }
+
+    function renderSponsors(){
+      // simple looping rail: duplicate list for seamless animation
+      const sponsors = [
+        {name:"HyperNova", tag:"Headsets"},
+        {name:"VoltFuel", tag:"Energy"},
+        {name:"GLHF Bank", tag:"Partner"},
+        {name:"Prism ISP", tag:"Low ping"},
+        {name:"Aether GPUs", tag:"Frames"},
+        {name:"Arcade Gear", tag:"Keyboards"}
+      ];
+      const doubled = sponsors.concat(sponsors);
+
+      els.sponsorRail.innerHTML = doubled.map(s=>`
+        <div class="sponsor">
+          <div class="sLogo" aria-hidden="true"></div>
+          <div>
+            <b>${escapeHtml(s.name)}</b>
+            <small>${escapeHtml(s.tag)}</small>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderNowNext(){
+      const items = getVisibleSchedule()
+        .filter(m=>!!m.startUtc)
+        .sort((a,b)=> new Date(a.startUtc) - new Date(b.startUtc));
+
+      const now = Date.now();
+      let nowIdx = items.findIndex(m => new Date(m.startUtc).getTime() <= now && new Date(m.endUtc).getTime() > now);
+      if(nowIdx < 0){
+        // next upcoming
+        nowIdx = items.findIndex(m => new Date(m.startUtc).getTime() > now);
+      }
+
+      const slice = [];
+      for(let i=0;i<3;i++){
+        const idx = (nowIdx < 0) ? i : (nowIdx + i);
+        if(items[idx]) slice.push(items[idx]);
+      }
+
+      els.nnTzHint.textContent = `TZ: ${state.tz === "local" ? getLocalTz() : state.tz}`;
+
+      els.nowNextList.innerHTML = "";
+      slice.forEach((m,i)=>{
+        const label = i===0 ? "NOW" : (i===1 ? "NEXT" : "LATER");
+        const el = document.createElement("div");
+        el.className = "nn";
+        el.innerHTML = `
+          <span class="k">${label}</span>
+          <span class="v">${escapeHtml(m.stage)} • ${escapeHtml(matchTeamsText(m))} • ${escapeHtml(formatTime(m.startUtc, state.tz))}</span>
+        `;
+        els.nowNextList.appendChild(el);
+      });
+
+      // ticker rotates between first two items
+      const tA = slice[0] ? `${slice[0].stage} • ${matchTeamsText(slice[0])} • ${formatTime(slice[0].startUtc, state.tz)}` : "No matches right now.";
+      const tB = slice[1] ? `${slice[1].stage} • ${matchTeamsText(slice[1])} • ${formatTime(slice[1].startUtc, state.tz)}` : "Scheduling updates incoming.";
+
+      tickTicker([["NOW", tA], ["NEXT", tB]]);
+    }
+
+    /* ==========================================================
+      Visibility helpers (8 vs 16 schedule)
+    ========================================================== */
+    function getVisibleSchedule(){
+      if(state.use16) return state.schedule;
+      // For 8-team mode: show only first 4 Day-1 matches, then Q/S/F trimmed to 4/2/1 already
+      const allowed = new Set(["m1","m2","m3","m4","q1","q2","s1","f"]);
+      return state.schedule.filter(m => allowed.has(m.id));
+    }
+
+    function matchTeamsText(m){
+      const bySeed = state.bracket?.bySeed;
+      const a = m.seedA ? bySeed.get(m.seedA) : null;
+      const b = m.seedB ? bySeed.get(m.seedB) : null;
+      return `${a ? a.tag : "TBD"} vs ${b ? b.tag : "TBD"}`;
+    }
+
+    function matchIdToSchedule(mid){
+      // r1_1 -> m1, r2_1 -> q1, r3_1 -> s1, r4_1 -> f (best effort)
+      // Our bracket ids are r{round}_{index}. We'll map by index.
+      if(mid.startsWith("r1_")){
+        const i = Number(mid.split("_")[1]);
+        const id = `m${i}`;
+        return state.schedule.find(m => m.id === id) || null;
+      }
+      if(mid.startsWith("r2_")){
+        const i = Number(mid.split("_")[1]);
+        const id = `q${i}`;
+        return state.schedule.find(m => m.id === id) || null;
+      }
+      if(mid.startsWith("r3_")){
+        const i = Number(mid.split("_")[1]);
+        const id = `s${i}`;
+        return state.schedule.find(m => m.id === id) || null;
+      }
+      if(mid === "r4_1"){
+        return state.schedule.find(m => m.id === "f") || null;
+      }
+      return null;
+    }
+
+    function enrichScheduleMatch(m){
+      // Convert to a richer event title
+      const teams = matchTeamsText(m);
+      return {
+        ...m,
+        title: `${TOURNAMENT.name} — ${m.stage}: ${teams}`,
+        description: [
+          `Match: ${teams}`,
+          `Stage: ${m.stage} (Bo${m.bestOf})`,
+          `Stream: ${m.stream}`,
+          `Venue: ${TOURNAMENT.venue}`,
+          `Note: Times are stored as UTC in the ICS; your calendar will display locally.`
+        ].join("\\n")
+      };
+    }
+
+    /* ==========================================================
+      ICS export
+    ========================================================== */
+    function toIcsUtc(dt){
+      // dt is ISO string with Z
+      const d = new Date(dt);
+      // YYYYMMDDTHHMMSSZ
+      const pad = n => String(n).padStart(2,"0");
+      const y = d.getUTCFullYear();
+      const m = pad(d.getUTCMonth()+1);
+      const da = pad(d.getUTCDate());
+      const h = pad(d.getUTCHours());
+      const mi = pad(d.getUTCMinutes());
+      const s = pad(d.getUTCSeconds());
+      return `${y}${m}${da}T${h}${mi}${s}Z`;
+    }
+
+    function escapeIcs(s){
+      // Escape commas, semicolons, backslashes, and newlines
+      return String(s || "")
+        .replace(/\\/g,"\\\\")
+        .replace(/\n/g,"\\n")
+        .replace(/,/g,"\\,")
+        .replace(/;/g,"\\;");
+    }
+
+    function buildIcsForMatches(matches){
+      const now = toIcsUtc(new Date().toISOString());
+      const lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//NeonCircuit//EsportsLanding//EN",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH"
+      ];
+
+      matches.forEach(m=>{
+        const uid = `${m.id}-${m.startUtc}-${Math.random().toString(16).slice(2)}@neoncircuit.local`;
+        lines.push(
+          "BEGIN:VEVENT",
+          `UID:${uid}`,
+          `DTSTAMP:${now}`,
+          `DTSTART:${toIcsUtc(m.startUtc)}`,
+          `DTEND:${toIcsUtc(m.endUtc)}`,
+          `SUMMARY:${escapeIcs(m.title || `${TOURNAMENT.name} — ${m.stage}`)}`,
+          `LOCATION:${escapeIcs(TOURNAMENT.venue)}`,
+          `DESCRIPTION:${escapeIcs(m.description || "")}`,
+          "END:VEVENT"
+        );
+      });
+
+      lines.push("END:VCALENDAR");
+      return lines.join("\r\n");
+    }
+
+    function downloadText(filename, text, mime="text/plain"){
+      const blob = new Blob([text], {type:mime});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 8000);
+    }
+
+    /* ==========================================================
+      UX: toast, flash, compare
+    ========================================================== */
+    let toastTimer = null;
+    function toast(title, msg){
+      els.toastTitle.textContent = title;
+      els.toastMsg.textContent = msg;
+      els.toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>els.toast.classList.remove("show"), 2600);
+    }
+
+    function flashMatch(scheduleId){
+      // Map schedule id back to bracket id and flash it
+      // schedule m1 -> r1_1 etc.
+      let bracketId = null;
+      if(scheduleId.startsWith("m")) bracketId = `r1_${scheduleId.slice(1)}`;
+      if(scheduleId.startsWith("q")) bracketId = `r2_${scheduleId.slice(1)}`;
+      if(scheduleId.startsWith("s")) bracketId = `r3_${scheduleId.slice(1)}`;
+      if(scheduleId === "f") bracketId = "r4_1";
+
+      const node = document.querySelector(`.match[data-mid="${bracketId}"]`);
+      if(!node) return;
+      node.scrollIntoView({behavior:"smooth", block:"center", inline:"center"});
+      node.animate(
+        [{ boxShadow:"0 0 0 rgba(0,0,0,0)" }, { boxShadow:"0 0 0 3px rgba(0,229,255,.22), 0 0 34px rgba(0,229,255,.20)" }, { boxShadow:"0 0 0 rgba(0,0,0,0)" }],
+        { duration: 850, easing: "ease-out" }
+      );
+    }
+
+    function toggleCompare(seed){
+      if(state.compare.includes(seed)){
+        state.compare = state.compare.filter(s => s !== seed);
+      } else {
+        if(state.compare.length >= 2){
+          // replace the oldest selection
+          state.compare.shift();
+        }
+        state.compare.push(seed);
+      }
+      renderTeams();
+      renderCompareDrawer();
+    }
+
+    /* ==========================================================
+      Modal forms (Register / Tickets)
+    ========================================================== */
+    function openModal(type){
+      els.modal.classList.add("open");
+      els.btnModalSubmit.dataset.type = type;
+
+      if(type === "register"){
+        els.modalTitle.textContent = "Register Team";
+        els.modalBody.innerHTML = `
+          <div class="formGrid">
+            <div class="field">
+              <label>Team name</label>
+              <input id="f_team" placeholder="e.g., Vanta Vipers" />
+            </div>
+            <div class="field">
+              <label>Region</label>
+              <select id="f_region">
+                <option>AMER</option><option>EMEA</option><option>APAC</option><option>INTL</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Contact email</label>
+              <input id="f_email" type="email" placeholder="team@domain.com" />
+            </div>
+            <div class="field">
+              <label>Discord</label>
+              <input id="f_discord" placeholder="handle#0000" />
+            </div>
+            <div class="field" style="grid-column:1/-1">
+              <label>Notes</label>
+              <textarea id="f_notes" placeholder="Roster changes, substitutes, etc."></textarea>
+            </div>
+          </div>
+        `;
+      } else {
+        els.modalTitle.textContent = "Get Tickets";
+        els.modalBody.innerHTML = `
+          <div class="formGrid">
+            <div class="field">
+              <label>Full name</label>
+              <input id="t_name" placeholder="First Last" />
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input id="t_email" type="email" placeholder="you@domain.com" />
+            </div>
+            <div class="field">
+              <label>Ticket type</label>
+              <select id="t_type">
+                <option>Weekend Pass</option>
+                <option>Day 1 Only</option>
+                <option>Day 2 Only</option>
+                <option>VIP (front row)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Quantity</label>
+              <input id="t_qty" type="number" min="1" max="10" value="1" />
+            </div>
+            <div class="field" style="grid-column:1/-1">
+              <label>Accessibility requests (optional)</label>
+              <textarea id="t_access" placeholder="Captioning, step-free seating, reserved quiet area…"></textarea>
+            </div>
+          </div>
+        `;
+      }
+
+      // focus first input
+      setTimeout(()=>{
+        const first = els.modalBody.querySelector("input,select,textarea");
+        if(first) first.focus();
+      }, 0);
+    }
+
+    function closeModal(){
+      els.modal.classList.remove("open");
+      els.modalBody.innerHTML = "";
+    }
+
+    /* ==========================================================
+      Ticker rotation
+    ========================================================== */
+    let tickerTimer = null;
+    function tickTicker(pairs){
+      // pairs: [[label, text], ...]
+      clearInterval(tickerTimer);
+      let i = 0;
+      const set = ()=>{
+        const [lab, txt] = pairs[i % pairs.length];
+        els.tickerLabel.textContent = lab;
+        els.tickerText.textContent = txt;
+        i++;
+      };
+      set();
+      tickerTimer = setInterval(set, 2600);
+    }
+
+    /* ==========================================================
+      Clock tick
+    ========================================================== */
+    function tickClock(){
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2,"0");
+      const mm = String(now.getMinutes()).padStart(2,"0");
+      const ss = String(now.getSeconds()).padStart(2,"0");
+      els.localTime.textContent = `Now: ${hh}:${mm}:${ss}`;
+    }
+
+    /* ==========================================================
+      Demo mode auto-advance
+    ========================================================== */
+    let demoTimer = null;
+    function setDemo(on){
+      state.demo = on;
+      els.demoStatus.textContent = `Demo mode: ${on ? "ON" : "OFF"}`;
+
+      if(on){
+        toast("Demo mode enabled", "Winners will auto-advance every few seconds.");
+        clearInterval(demoTimer);
+        demoTimer = setInterval(()=>{
+          if(!state.bracket) return;
+          const br = state.bracket;
+
+          // find first "ready" match without winner, preferring earlier rounds
+          for(let r=0;r<br.rounds.length;r++){
+            const round = br.rounds[r];
+            for(let m=0;m<round.length;m++){
+              const match = round[m];
+              if(match.winnerSeed) continue;
+              // must have both teams known
+              const A = match.seedA ? br.bySeed.get(match.seedA) : null;
+              const B = match.seedB ? br.bySeed.get(match.seedB) : null;
+              if(!A || !B) continue;
+              const winSeed = pickWinnerWeighted(A, B);
+              setWinner(br, r, m, winSeed);
+              syncScheduleFromBracket();
+              renderAll();
+              return;
+            }
+          }
+          // if completed, restart
+          resetBracket();
+          toast("Bracket reset", "Demo completed — looping.");
+        }, 2200);
+      } else {
+        clearInterval(demoTimer);
+        demoTimer = null;
+      }
+    }
+
+    /* ==========================================================
+      Reset + init
+    ========================================================== */
+    function resetBracket(){
+      state.bracket = buildInitialBracket(state.teams);
+      syncScheduleFromBracket();
+      renderAll();
+    }
+
+    function applyTeams(use16){
+      state.use16 = use16;
+      state.teams = use16 ? teams16 : teams8;
+      state.compare = [];
+      resetBracket();
+      renderScheduleFilters();
+      renderSchedule();
+      renderTeams();
+      renderCompareDrawer();
+      updateStats();
+    }
+
+    /* ==========================================================
+      Wiring events
+    ========================================================== */
+    function wire(){
+      els.toggle16.addEventListener("change", ()=>{
+        applyTeams(els.toggle16.checked);
+        toast("Bracket size changed", els.toggle16.checked ? "16-team bracket enabled." : "8-team bracket enabled.");
+      });
+
+      els.toggleDemo.addEventListener("change", ()=>{
+        setDemo(els.toggleDemo.checked);
+      });
+
+      els.tzSelect.addEventListener("change", ()=>{
+        state.tz = els.tzSelect.value;
+        renderAll();
+        toast("Timezone updated", `Displaying times in: ${state.tz === "local" ? getLocalTz() : state.tz}`);
+      });
+
+      els.btnResetBracket.addEventListener("click", ()=>{
+        resetBracket();
+        toast("Bracket reset", "All winners cleared.");
+      });
+
+      els.stageFilter.addEventListener("change", ()=> renderSchedule());
+      els.dayFilter.addEventListener("change", ()=> renderSchedule());
+
+      els.btnFullICS.addEventListener("click", ()=>{
+        const events = getVisibleSchedule()
+          .slice()
+          .sort((a,b)=> new Date(a.startUtc) - new Date(b.startUtc))
+          .map(enrichScheduleMatch);
+        const ics = buildIcsForMatches(events);
+        downloadText(`${TOURNAMENT.name} — Full Schedule.ics`, ics, "text/calendar");
+        toast("Full schedule downloaded", `${events.length} event(s) exported.`);
+      });
+
+      els.btnAddDayICS.addEventListener("click", ()=>{
+        const stage = els.stageFilter.value || "all";
+        const day = els.dayFilter.value || "all";
+        const events = getVisibleSchedule()
+          .filter(m => stage === "all" ? true : m.stage === stage)
+          .filter(m => day === "all" ? true : m.day === day)
+          .sort((a,b)=> new Date(a.startUtc) - new Date(b.startUtc))
+          .map(enrichScheduleMatch);
+
+        if(events.length === 0){
+          toast("Nothing to export", "Your current filters returned no matches.");
+          return;
+        }
+        const ics = buildIcsForMatches(events);
+        downloadText(`${TOURNAMENT.name} — Filtered.ics`, ics, "text/calendar");
+        toast("Filtered schedule downloaded", `${events.length} event(s) exported.`);
+      });
+
+      els.teamSearch.addEventListener("input", ()=> renderTeams());
+
+      els.btnClearCompare.addEventListener("click", ()=>{
+        state.compare = [];
+        renderTeams();
+        renderCompareDrawer();
+        toast("Compare cleared", "Selections removed.");
+      });
+
+      els.btnCloseDrawer.addEventListener("click", ()=>{
+        state.compare = [];
+        renderTeams();
+        renderCompareDrawer();
+      });
+
+      els.btnSwapCompare.addEventListener("click", ()=>{
+        if(state.compare.length === 2) state.compare.reverse();
+        renderCompareDrawer();
+      });
+
+      // Modal
+      els.btnRegister.addEventListener("click", ()=>openModal("register"));
+      els.btnTickets.addEventListener("click", ()=>openModal("tickets"));
+
+      els.btnModalClose.addEventListener("click", closeModal);
+      els.btnModalCancel.addEventListener("click", closeModal);
+      els.modal.addEventListener("click", (e)=>{
+        if(e.target === els.modal) closeModal();
+      });
+      document.addEventListener("keydown", (e)=>{
+        if(e.key === "Escape" && els.modal.classList.contains("open")) closeModal();
+      });
+
+      els.btnModalSubmit.addEventListener("click", ()=>{
+        const type = els.btnModalSubmit.dataset.type;
+        closeModal();
+        toast("Submitted!", type === "register" ? "Team registration saved (demo)." : "Ticket request saved (demo).");
+      });
+
+      // per-second clock tick
+      setInterval(tickClock, 1000);
+    }
+
+    /* ==========================================================
+      Venue links
+    ========================================================== */
+    function setVenueLinks(){
+      const venueQuery = encodeURIComponent(`${TOURNAMENT.venue}`);
+      els.venueName.textContent = "Nova Arena";
+      els.venueAddr.textContent = "123 Neon Blvd, Downtown";
+      els.gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=${venueQuery}`;
+      els.walkLink.href = `https://www.google.com/maps/dir/?api=1&destination=${venueQuery}&travelmode=walking`;
+      els.transitLink.href = `https://www.google.com/maps/dir/?api=1&destination=${venueQuery}&travelmode=transit`;
+      els.rideLink.href = `https://www.google.com/maps/dir/?api=1&destination=${venueQuery}&travelmode=driving`;
+    }
+
+    /* ==========================================================
+      Misc
+    ========================================================== */
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;");
+    }
+
+    /* ==========================================================
+      Canvas: neon pseudo-3D grid + particles + scan wobble
+      (Lightweight, no libraries)
+    ========================================================== */
+    const canvas = document.getElementById("heroCanvas");
+    const ctx = canvas.getContext("2d", { alpha: false });
+    const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    let W=0, H=0;
+
+    const field = {
+      t: 0,
+      particles: [],
+      stars: [],
+      // camera
+      camZ: 2.8,
+      // grid params
+      gridSpacing: 0.25,
+      gridDepth: 24,
+      tilt: 0.70,
+      wobble: 0,
+    };
+
+    function resizeCanvas(){
+      const rect = canvas.getBoundingClientRect();
+      W = Math.floor(rect.width * DPR);
+      H = Math.floor(rect.height * DPR);
+      canvas.width = W;
+      canvas.height = H;
+
+      // seed particles/stars
+      field.particles = [];
+      field.stars = [];
+      const pCount = Math.round((rect.width * rect.height) / 20000);
+      const sCount = Math.round((rect.width * rect.height) / 12000);
+
+      for(let i=0;i<pCount;i++){
+        field.particles.push({
+          x: (Math.random()*2 - 1) * 1.2,
+          y: (Math.random()*2 - 1) * 0.8,
+          z: Math.random() * field.gridDepth,
+          r: 0.008 + Math.random()*0.012,
+          a: 0.25 + Math.random()*0.65,
+          hue: Math.random() < 0.5 ? 190 : 314
+        });
+      }
+      for(let i=0;i<sCount;i++){
+        field.stars.push({
+          x: Math.random(),
+          y: Math.random(),
+          a: 0.08 + Math.random()*0.18
+        });
+      }
+    }
+
+    window.addEventListener("resize", resizeCanvas, {passive:true});
+
+    function project(x,y,z){
+      // simple perspective with tilt + center
+      const fov = 1.2;
+      const zz = (z + 1.2) / field.camZ;
+      const px = x / (zz * fov);
+      const py = (y + field.tilt * z * 0.03) / (zz * fov);
+      return {
+        x: (px * 0.5 + 0.5) * W,
+        y: (py * 0.5 + 0.58) * H
+      };
+    }
+
+    function draw(){
+      field.t += 0.008;
+      field.wobble = Math.sin(field.t * 1.1) * 0.015;
+
+      // background
+      ctx.fillStyle = "rgb(8,8,14)";
+      ctx.fillRect(0,0,W,H);
+
+      // soft vignette
+      const vg = ctx.createRadialGradient(W*0.52,H*0.35, W*0.1, W*0.52,H*0.35, W*0.7);
+      vg.addColorStop(0, "rgba(255,255,255,0.02)");
+      vg.addColorStop(1, "rgba(0,0,0,0.65)");
+      ctx.fillStyle = vg;
+      ctx.fillRect(0,0,W,H);
+
+      // tiny stars
+      ctx.save();
+      ctx.globalCompositeOperation = "screen";
+      for(const s of field.stars){
+        ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+        ctx.fillRect(s.x * W, s.y * H, 1 * DPR, 1 * DPR);
+      }
+      ctx.restore();
+
+      // neon grid lines
+      const baseZ = (field.t * 6.5) % field.gridSpacing;
+      ctx.save();
+      ctx.globalCompositeOperation = "screen";
+      for(let i=0;i<120;i++){
+        const x = (i/119)*2 - 1;
+        // vertical lines
+        const hue = (i%2===0) ? 190 : 314;
+        ctx.strokeStyle = `hsla(${hue}, 100%, 60%, 0.10)`;
+        ctx.lineWidth = 1.2 * DPR;
+        ctx.beginPath();
+        for(let z=0; z<field.gridDepth; z+= field.gridSpacing){
+          const zz = z + baseZ;
+          const p = project(x + field.wobble, -0.55, zz);
+          if(z===0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+      }
+      for(let z=0; z<field.gridDepth; z += field.gridSpacing){
+        // horizontal lines (deeper = dimmer)
+        const alpha = 0.12 * (1 - z/field.gridDepth);
+        ctx.strokeStyle = `rgba(0,229,255,${alpha})`;
+        ctx.lineWidth = 1.1 * DPR;
+        ctx.beginPath();
+        const y = -0.55;
+        const pL = project(-1.1, y, z + baseZ);
+        const pR = project( 1.1, y, z + baseZ);
+        ctx.moveTo(pL.x, pL.y);
+        ctx.lineTo(pR.x, pR.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // particles
+      ctx.save();
+      ctx.globalCompositeOperation = "screen";
+      for(const p of field.particles){
+        p.z -= 0.020 + (p.hue===314 ? 0.006 : 0.0);
+        if(p.z < 0) p.z += field.gridDepth;
+
+        const q = project(p.x + Math.sin(field.t*1.3 + p.z)*0.01,
+                          p.y + Math.cos(field.t*1.1 + p.z)*0.01,
+                          p.z);
+
+        const size = (p.r * (1.8 - p.z/field.gridDepth)) * W;
+        const g = ctx.createRadialGradient(q.x, q.y, 0, q.x, q.y, size);
+        g.addColorStop(0, `hsla(${p.hue}, 100%, 65%, ${0.32*p.a})`);
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(q.x, q.y, size, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // subtle scan wobble band
+      ctx.save();
+      ctx.globalCompositeOperation = "overlay";
+      const bandY = (Math.sin(field.t * 1.6) * 0.12 + 0.48) * H;
+      const band = ctx.createLinearGradient(0, bandY-60, 0, bandY+60);
+      band.addColorStop(0, "rgba(255,255,255,0)");
+      band.addColorStop(0.5, "rgba(255,255,255,0.06)");
+      band.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = band;
+      ctx.fillRect(0, bandY-60, W, 120);
+      ctx.restore();
+
+      requestAnimationFrame(draw);
+    }
+
+    /* ==========================================================
+      Init
+    ========================================================== */
+    function init(){
+      els.year.textContent = new Date().getFullYear();
+
+      const localTz = getLocalTz();
+      // Set tz select default to local, but show local tz in UI
+      els.tzSelect.value = "local";
+      state.tz = "local";
+
+      setVenueLinks();
+
+      applyTeams(true);     // start with 16
+      wire();
+      resizeCanvas();
+      draw();
+
+      // finalize schedule filters now that we have bracket state
+      renderScheduleFilters();
+      renderSchedule();
+
+      // set "demo status"
+      setDemo(false);
+
+      toast("Ready", "Scroll for bracket, schedule, teams, stream, and venue.");
+    }
+
+    init();
+  </script>
+</body>
+</html>
+```
